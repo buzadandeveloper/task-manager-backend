@@ -44,11 +44,7 @@ export class UsersController {
     type: UserResponseDto,
   })
   async createUser(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createUser(
-      createUserDto.name,
-      createUserDto.email,
-      createUserDto.password,
-    );
+    return this.userService.createUser(createUserDto);
   }
 
   @Put('id')
