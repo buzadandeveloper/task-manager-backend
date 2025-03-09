@@ -2,6 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import * as dotenv from 'dotenv';
+import * as process from 'process';
+
+dotenv.config({
+  path: process.env.NODE_ENV === 'development' ? '.env.dev' : '.env',
+});
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,6 +16,8 @@ async function bootstrap() {
     .setTitle('Task Manager API')
     .setDescription('This is the API for the task manager application')
     .setVersion('1.0')
+    .addTag('auth')
+    .addTag('users')
     .addTag('tasks')
     .build();
 
