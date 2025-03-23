@@ -12,6 +12,11 @@ dotenv.config({
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  });
+
   const config = new DocumentBuilder()
     .setTitle('Task Manager API')
     .setDescription('This is the API for the task manager application')
