@@ -18,6 +18,8 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     const user = await this.authService.findOrCreateUser({
       email: profile.emails[0].value,
       name: profile.displayName || profile.emails[0].value.split('@')[0],
+      provider: 'github',
+      avatar: profile.photos?.[0]?.value || null,
     });
     return user;
   }

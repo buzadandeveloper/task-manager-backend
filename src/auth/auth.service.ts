@@ -27,7 +27,8 @@ export class AuthService {
         data: {
           email: profile.email,
           name: profile.name,
-          password: '',
+          provider: profile.provider,
+          avatar: profile.avatar || null,
         },
       });
     }

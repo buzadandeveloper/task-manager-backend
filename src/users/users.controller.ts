@@ -1,73 +1,25 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Param,
-  Body,
-} from '@nestjs/common';
+import { Controller, Get, UseGuards, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UserResponseDto } from './dto/user-response.dto';
+import { Request } from 'express';
 
 @ApiTags('users')
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
-  @Get()
-  @ApiOperation({ summary: 'Get all users' })
+  @Get('me')
+  @ApiOperation({ summary: 'Get current user profile' })
   @ApiResponse({
     status: 200,
-    description: 'The list of users',
-    type: [UserResponseDto],
-  })
-  async getAllUsers() {
-    return this.userService.getAllUsers();
-  }
-
-  @Get(':id')
-  @ApiOperation({ summary: 'Get user by ID' })
-  @ApiResponse({ status: 200, description: 'The user', type: UserResponseDto })
-  async getUserById(@Param('id') id: number) {
-    return this.userService.getUserById(Number(id));
-  }
-
-  @Post()
-  @ApiOperation({ summary: 'Create a new user' })
-  @ApiResponse({
-    status: 201,
-    description: 'The user has been successfully created',
+    description: 'Returns the currently logged-in user',
     type: UserResponseDto,
   })
-  async createUser(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createUser(createUserDto);
-  }
-
-  @Put('id')
-  @ApiOperation({ summary: 'Update user details' })
-  @ApiResponse({
-    status: 200,
-    description: 'The user has been successfully updated',
-    type: UserResponseDto,
-  })
-  async updateUser(
-    @Param('id') id: number,
-    @Body() updateUserDto: UpdateUserDto,
-  ) {
-    return this.userService.updateUser(Number(id), updateUserDto);
-  }
-
-  @Delete('id')
-  @ApiOperation({ summary: 'Delete a user' })
-  @ApiResponse({
-    status: 200,
-    description: 'The user has been successfully deleted',
-  })
-  async deleteUser(@Param('id') id: number) {
-    return this.userService.deleteUser(Number(id));
+  async getMe(@Req() req: Request) {
+    const userId = (req.user as any).sub;
+    return this.userService.getUserById(userId);
   }
 }
