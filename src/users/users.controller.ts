@@ -6,7 +6,7 @@ import { UserResponseDto } from './dto/user-response.dto';
 import { Request } from 'express';
 
 @ApiTags('users')
-@Controller('users')
+@Controller('api/users')
 @UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
