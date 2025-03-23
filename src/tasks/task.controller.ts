@@ -18,8 +18,8 @@ import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-@ApiTags('task')
-@Controller('task')
+@ApiTags('tasks')
+@Controller('api/tasks')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
@@ -38,6 +38,7 @@ export class TaskController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get task by id' })
   @ApiResponse({
     status: 200,
@@ -50,7 +51,8 @@ export class TaskController {
     return this.taskService.getTaskById(id, userId);
   }
 
-  @Get('status')
+  @Get('filter/status')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get tasks by status' })
   @ApiResponse({
     status: 200,
@@ -63,7 +65,7 @@ export class TaskController {
     return this.taskService.getTasksByStatus(status, userId);
   }
 
-  @Post()
+  @Post('newTask')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create a task' })
   @ApiResponse({
@@ -77,7 +79,7 @@ export class TaskController {
     return this.taskService.createTask(createTaskDto, userId);
   }
 
-  @Put(':id')
+  @Put('updateTask/:id')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Update a task' })
   @ApiResponse({
@@ -95,7 +97,7 @@ export class TaskController {
     return this.taskService.updateTask(id, updateTaskDto, userId);
   }
 
-  @Delete(':id')
+  @Delete('removeTask/:id')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Delete a task' })
   @ApiResponse({

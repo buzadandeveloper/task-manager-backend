@@ -11,9 +11,9 @@ model User {
   id        Int      @id @default(autoincrement())
   name      String
   email     String   @unique
-  password  String
+  provider  String   @default("")
+  avatar    String?
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
   tasks     Task[]
 }
 
