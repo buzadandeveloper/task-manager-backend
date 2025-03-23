@@ -17,7 +17,9 @@ export class AuthController {
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
     const user = req.user;
     const token = await this.authService.createJwtToken(user);
-    res.redirect(`/dashboard?token=${token.access_token}`);
+    res.redirect(
+      `${process.env.FRONTEND_URL}/dashboard?token=${token.access_token}`,
+    );
   }
 
   @UseGuards(GithubAuthGuard)
@@ -29,6 +31,8 @@ export class AuthController {
   async githubAuthRedirect(@Req() req, @Res() res: Response) {
     const user = req.user;
     const token = await this.authService.createJwtToken(user);
-    res.redirect(`/dashboard?token=${token.access_token}`);
+    res.redirect(
+      `${process.env.FRONTEND_URL}/dashboard?token=${token.access_token}`,
+    );
   }
 }
