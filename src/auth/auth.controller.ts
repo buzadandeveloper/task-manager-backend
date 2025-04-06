@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { Response } from 'express';
 import { GoogleAuthGuard } from './guard/google-auth.guard';
 import { GithubAuthGuard } from './guard/github-auth.guard';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -17,9 +18,14 @@ export class AuthController {
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
     const user = req.user;
     const token = await this.authService.createJwtToken(user);
-    res.redirect(
-      `${process.env.FRONTEND_URL}/dashboard?token=${token.access_token}`,
-    );
+    res.cookie('token', token.access_token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 60 * 24,
+    });
+
+    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
   }
 
   @UseGuards(GithubAuthGuard)
@@ -31,8 +37,31 @@ export class AuthController {
   async githubAuthRedirect(@Req() req, @Res() res: Response) {
     const user = req.user;
     const token = await this.authService.createJwtToken(user);
-    res.redirect(
-      `${process.env.FRONTEND_URL}/dashboard?token=${token.access_token}`,
-    );
+    res.cookie('token', token.access_token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 60 * 24,
+    });
+
+    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  async getProfile(@Req() req) {
+    return req.user;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('logout')
+  async logout(@Res() res: Response) {
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+    });
+
+    res.redirect(`${process.env.FRONTEND_URL}/login`);
   }
 }
