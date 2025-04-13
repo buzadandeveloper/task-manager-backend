@@ -7,7 +7,6 @@ import {
   Delete,
   Param,
   Body,
-  Query,
   UseGuards,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
@@ -17,6 +16,7 @@ import { TaskResponseDto } from './dto/task-response.dto';
 import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { TaskStatus } from './enum/task.enum';
 
 @ApiTags('tasks')
 @Controller('api/tasks')
@@ -51,7 +51,7 @@ export class TaskController {
     return this.taskService.getTaskById(id, userId);
   }
 
-  @Get('filter/status')
+  @Get('filter/:status')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get tasks by status' })
   @ApiResponse({
@@ -59,7 +59,10 @@ export class TaskController {
     description: 'Return tasks by status for the logged-in user',
     type: [TaskResponseDto],
   })
-  async getTasksByStatus(@Query('status') status: number, @Req() req: Request) {
+  async getTasksByStatus(
+    @Param('status') status: TaskStatus,
+    @Req() req: Request,
+  ) {
     const user = (req as any).user;
     const userId = user.sub;
     return this.taskService.getTasksByStatus(status, userId);

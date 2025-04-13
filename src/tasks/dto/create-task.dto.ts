@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, IsOptional } from 'class-validator';
+import { IsString, IsEnum, IsOptional } from 'class-validator';
+import { TaskStatus } from '../enum/task.enum';
 
 export class CreateTaskDto {
   @ApiProperty({ description: 'The title of the task' })
@@ -11,11 +12,14 @@ export class CreateTaskDto {
   description: string;
 
   @ApiProperty({
-    description: 'The status of the task',
-    example: '0: To do, 1: In progress, 2: Completed',
+    description:
+      'The status of the task. Enum values: 0 = ToDo, 1 = InProgress, 2 = Completed',
+    enum: TaskStatus,
+    enumName: 'TaskStatus',
+    example: TaskStatus.ToDo,
   })
-  @IsNumber()
-  status: number;
+  @IsEnum(TaskStatus)
+  status: TaskStatus;
 
   @ApiProperty({
     description: 'The start time of the task',
