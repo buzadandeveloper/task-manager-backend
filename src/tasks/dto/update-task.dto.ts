@@ -22,4 +22,20 @@ export class UpdateTaskDto {
   @IsEnum(TaskStatus)
   @IsOptional()
   status?: TaskStatus;
+
+  @ApiProperty({
+    description: 'The start time of the task',
+    nullable: true,
+    required: false,
+  })
+  @IsOptional()
+  startTime?: Date;
+
+  @ApiProperty({
+    description: 'The end time of the task',
+    nullable: true,
+    required: false,
+  })
+  @IsOptional()
+  endTime?: Date;
 }
