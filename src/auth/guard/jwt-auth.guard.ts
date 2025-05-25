@@ -13,7 +13,7 @@ export class JwtAuthGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<Request>();
-    const token = request.cookies?.['token'];
+    const token = request.query?.token as string;
 
     if (!token) {
       throw new UnauthorizedException('No token provided');
@@ -24,7 +24,6 @@ export class JwtAuthGuard implements CanActivate {
         secret: process.env.JWT_SECRET,
       });
       request.user = decoded;
-
       return true;
     } catch (err) {
       throw new UnauthorizedException('Invalid token');

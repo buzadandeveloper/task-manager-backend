@@ -14,9 +14,9 @@
 - **Backend Framework**: [NestJS](https://nestjs.com/)
 - **Database ORM**: [Prisma](https://www.prisma.io/)
 - **Database**: PostgreSQL
-- **Authentication**: Google & GitHub OAuth + JWT (stored in HttpOnly cookies)
+- **Authentication**: Google & GitHub OAuth + JWT
 - **Deployment**: Railway (Backend), Vercel (Frontend)
-- **Security**: CORS, JWT, Rate Limiting, HttpOnly Cookies
+- **Security**: CORS, JWT, Rate Limiting, HttpOnly 
 
 ---
 
@@ -71,9 +71,9 @@ npm run start:dev
 ## ✅ Features
 
 - 🔐 OAuth login via Google & GitHub
-- 🍪 JWT-based auth stored in secure HttpOnly cookies
+- 🪙 JWT-based auth 
 - 🧩 Profile endpoint to get current user
-- 🚪 Logout endpoint that clears the cookie
+- 🚪 Logout 
 - 🌍 CORS configured for frontend access
 - ⏳ JWT expiration and token validation
 - 🛡 Global rate limiting to prevent spam/abuse
@@ -97,13 +97,3 @@ When running locally, Swagger is available at:
 ```
 http://localhost:3000/api
 ```
-
----
-
-## 🧠 Useful Tips
-
-- Use Postman to test protected routes by setting the `token` cookie manually.
-- Don't forget to restart the server when adding new routes for them to appear in Swagger.
-- JWTs expire in 24 hours and are verified using guards (`JwtAuthGuard`).
-
----
