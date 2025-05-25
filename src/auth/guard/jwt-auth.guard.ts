@@ -13,16 +13,20 @@ export class JwtAuthGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<Request>();
-    const token = request.query?.token as string;
 
-    if (!token) {
+    const authHeader = request.headers['authorization'];
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       throw new UnauthorizedException('No token provided');
     }
+
+    const token = authHeader.split(' ')[1];
 
     try {
       const decoded = this.jwtService.verify(token, {
         secret: process.env.JWT_SECRET,
       });
+
       request.user = decoded;
       return true;
     } catch (err) {
