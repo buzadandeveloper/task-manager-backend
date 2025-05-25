@@ -11,16 +11,22 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
       clientID: `${process.env.GITHUB_CLIENT_ID}`,
       clientSecret: `${process.env.GITHUB_CLIENT_SECRET}`,
       callbackURL: `${process.env.BACKEND_URL}/auth/github/callback`,
+      passReqToCallback: true,
     });
   }
 
-  async validate(accessToken: string, refreshToken: string, profile: any) {
+  async validate(
+    req: any,
+    accessToken: string,
+    refreshToken: string,
+    profile: any,
+  ) {
     const user = await this.authService.findOrCreateUser({
       email: profile.emails[0].value,
       name: profile.displayName || profile.emails[0].value.split('@')[0],
       provider: 'github',
       avatar: profile.photos?.[0]?.value || null,
     });
-    return user;
+    return { ...user, redirect_uri: req.query.state };
   }
 }
