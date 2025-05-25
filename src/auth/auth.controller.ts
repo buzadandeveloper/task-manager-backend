@@ -18,6 +18,8 @@ export class AuthController {
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
     const user = req.user;
     const token = await this.authService.createJwtToken(user);
+    const redirectBase = req.query.redirect_uri || process.env.FRONTEND_URL;
+
     res.cookie('token', token.access_token, {
       httpOnly: true,
       secure: true,
@@ -25,7 +27,7 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24,
     });
 
-    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+    res.redirect(`${redirectBase}/dashboard`);
   }
 
   @UseGuards(GithubAuthGuard)
@@ -37,6 +39,8 @@ export class AuthController {
   async githubAuthRedirect(@Req() req, @Res() res: Response) {
     const user = req.user;
     const token = await this.authService.createJwtToken(user);
+    const redirectBase = req.query.redirect_uri || process.env.FRONTEND_URL;
+
     res.cookie('token', token.access_token, {
       httpOnly: true,
       secure: true,
@@ -44,7 +48,7 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24,
     });
 
-    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+    res.redirect(`${redirectBase}/dashboard`);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -55,13 +59,15 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('logout')
-  async logout(@Res() res: Response) {
+  async logout(@Req() req, @Res() res: Response) {
+    const redirectBase = req.query.redirect_uri || process.env.FRONTEND_URL;
+
     res.clearCookie('token', {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
     });
 
-    res.redirect(`${process.env.FRONTEND_URL}/login`);
+    res.redirect(`${redirectBase}/login`);
   }
 }
