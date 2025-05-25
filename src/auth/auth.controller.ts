@@ -18,7 +18,7 @@ export class AuthController {
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
     const user = req.user;
     const token = await this.authService.createJwtToken(user);
-    const redirectBase = req.query.redirect_uri || process.env.FRONTEND_URL;
+    const redirectBase = user.redirect_uri || process.env.FRONTEND_URL;
 
     res.cookie('token', token.access_token, {
       httpOnly: true,
@@ -39,7 +39,7 @@ export class AuthController {
   async githubAuthRedirect(@Req() req, @Res() res: Response) {
     const user = req.user;
     const token = await this.authService.createJwtToken(user);
-    const redirectBase = req.query.redirect_uri || process.env.FRONTEND_URL;
+    const redirectBase = user.redirect_uri || process.env.FRONTEND_URL;
 
     res.cookie('token', token.access_token, {
       httpOnly: true,
@@ -60,7 +60,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('logout')
   async logout(@Req() req, @Res() res: Response) {
-    const redirectBase = req.query.redirect_uri || process.env.FRONTEND_URL;
+    const user = req.user;
+    const redirectBase = user.redirect_uri || process.env.FRONTEND_URL;
 
     res.clearCookie('token', {
       httpOnly: true,
