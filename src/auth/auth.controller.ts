@@ -34,14 +34,7 @@ export class AuthController {
     const token = await this.authService.createJwtToken(user);
     const redirectBase = user.redirect_uri || process.env.FRONTEND_URL;
 
-    res.cookie('token', token.access_token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-      maxAge: 1000 * 60 * 60 * 24,
-    });
-
-    res.redirect(`${redirectBase}/dashboard`);
+    res.redirect(`${redirectBase}/auth-success?token=${token.access_token}`);
   }
 
   @Get('github')
@@ -66,14 +59,7 @@ export class AuthController {
     const token = await this.authService.createJwtToken(user);
     const redirectBase = user.redirect_uri || process.env.FRONTEND_URL;
 
-    res.cookie('token', token.access_token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-      maxAge: 1000 * 60 * 60 * 24,
-    });
-
-    res.redirect(`${redirectBase}/dashboard`);
+    res.redirect(`${redirectBase}/auth-success?token=${token.access_token}`);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -86,12 +72,6 @@ export class AuthController {
   @Get('logout')
   async logout(@Req() req, @Res() res: Response) {
     const redirectBase = req.query.redirect_uri || process.env.FRONTEND_URL;
-
-    res.clearCookie('token', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-    });
 
     res.redirect(`${redirectBase}/login`);
   }
