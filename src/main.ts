@@ -10,12 +10,22 @@ dotenv.config({
   path: process.env.NODE_ENV === 'development' ? '.env.dev' : '.env',
 });
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://task-manager-frontend-mu-ten.vercel.app',
+];
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-    credentials: false,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
