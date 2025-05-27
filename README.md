@@ -71,7 +71,7 @@ npm run start:dev
 ## ✅ Features
 
 - 🔐 OAuth login via Google & GitHub
-- 🍪 JWT-based auth stored in secure HttpOnly cookies
+- 🍪 JWT-based auth stored in secure HttpOnly cookies.
 - 🧩 Profile endpoint to get current user
 - 🚪 Logout endpoint that clears the cookie
 - 🌍 CORS configured for frontend access
