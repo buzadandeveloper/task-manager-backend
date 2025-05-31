@@ -32,18 +32,9 @@ export class AuthController {
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
     const user = req.user;
     const token = await this.authService.createJwtToken(user);
-    const redirectBase = req.query.state || process.env.FRONTEND_URL;
-    const origin = req.headers.origin || '';
-    const isDev = origin.includes('localhost');
+    const redirectBase = user.redirect_uri || process.env.FRONTEND_URL;
 
-    res.cookie('token', token.access_token, {
-      httpOnly: true,
-      secure: !isDev,
-      sameSite: isDev ? 'lax' : 'none',
-      maxAge: 60 * 60 * 1000,
-    });
-
-    res.redirect(`${redirectBase}/dashboard`);
+    res.redirect(`${redirectBase}/auth-success?token=${token.access_token}`);
   }
 
   @Get('github')
@@ -66,18 +57,9 @@ export class AuthController {
   async githubAuthRedirect(@Req() req, @Res() res: Response) {
     const user = req.user;
     const token = await this.authService.createJwtToken(user);
-    const redirectBase = req.query.state || process.env.FRONTEND_URL;
-    const origin = req.headers.origin || '';
-    const isDev = origin.includes('localhost');
+    const redirectBase = user.redirect_uri || process.env.FRONTEND_URL;
 
-    res.cookie('token', token.access_token, {
-      httpOnly: true,
-      secure: !isDev,
-      sameSite: isDev ? 'lax' : 'none',
-      maxAge: 60 * 60 * 1000,
-    });
-
-    res.redirect(`${redirectBase}/dashboard`);
+    res.redirect(`${redirectBase}/auth-success?token=${token.access_token}`);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -89,15 +71,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('logout')
   async logout(@Req() req, @Res() res: Response) {
-    const origin = req.headers.origin || '';
-    const isDev = origin.includes('localhost');
     const redirectBase = req.query.redirect_uri || process.env.FRONTEND_URL;
-
-    res.clearCookie('token', {
-      httpOnly: true,
-      secure: !isDev,
-      sameSite: isDev ? 'lax' : 'none',
-    });
 
     res.redirect(`${redirectBase}/login`);
   }
