@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsEnum, IsOptional } from 'class-validator';
+import { IsString, IsEnum, IsOptional, IsISO8601 } from 'class-validator';
 import { TaskStatus } from '../enum/task.enum';
 
 export class CreateTaskDto {
@@ -22,18 +22,12 @@ export class CreateTaskDto {
   status: TaskStatus;
 
   @ApiProperty({
-    description: 'The start time of the task',
-    nullable: true,
+    description: 'The date when the task was requested',
+    example: '2025-06-26T15:30:00.000Z',
     required: false,
+    nullable: true,
   })
   @IsOptional()
-  startTime?: Date;
-
-  @ApiProperty({
-    description: 'The end time of the task',
-    nullable: true,
-    required: false,
-  })
-  @IsOptional()
-  endTime?: Date;
+  @IsISO8601()
+  date?: string;
 }
