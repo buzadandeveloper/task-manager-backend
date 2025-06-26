@@ -20,15 +20,9 @@ export class TaskResponseDto {
   })
   status: TaskStatus;
 
-  @ApiProperty({ nullable: true, description: 'Time when task started' })
-  startTime?: Date;
-
-  @ApiProperty({ nullable: true, description: 'Time when task was completed' })
-  endTime?: Date;
-
-  @ApiProperty()
-  createdAt: Date;
-
-  @ApiProperty()
-  updatedAt: Date;
+  @ApiProperty({
+    description: 'The date when the task was requested (ISO8601)',
+    example: '2025-06-26T15:30:00.000Z',
+  })
+  date: Date;
 }

@@ -8,15 +8,14 @@ export class TaskService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createTask(createTaskDto: CreateTaskDto, userId: number) {
-    const { title, description, status, startTime, endTime } = createTaskDto;
+    const { title, description, status, date } = createTaskDto;
 
     return this.prisma.task.create({
       data: {
         title,
         description,
         status,
-        startTime,
-        endTime,
+        date: date ? new Date(date) : new Date(),
         user: { connect: { id: userId } },
       },
     });

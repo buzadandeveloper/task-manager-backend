@@ -24,18 +24,8 @@ export class UpdateTaskDto {
   status?: TaskStatus;
 
   @ApiProperty({
-    description: 'The start time of the task',
-    nullable: true,
-    required: false,
+    description: 'The date when the task was requested (ISO8601)',
+    example: '2025-06-26T15:30:00.000Z',
   })
-  @IsOptional()
-  startTime?: Date;
-
-  @ApiProperty({
-    description: 'The end time of the task',
-    nullable: true,
-    required: false,
-  })
-  @IsOptional()
-  endTime?: Date;
+  date: Date;
 }
