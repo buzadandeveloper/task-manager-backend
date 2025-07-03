@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { UpdateStatusDto } from './dto/update-status.dto';
 
 @Injectable()
 export class TaskService {
@@ -26,6 +27,7 @@ export class TaskService {
       where: {
         userId: userId,
       },
+      orderBy: { id: 'asc' },
     });
   }
 
@@ -54,6 +56,22 @@ export class TaskService {
         userId: userId,
       },
       data: updateTaskDto,
+    });
+  }
+
+  async updateTaskStatus(
+    id: number,
+    updateStatusDto: UpdateStatusDto,
+    userId: number,
+  ) {
+    return this.prisma.task.update({
+      where: {
+        id,
+        userId: userId,
+      },
+      data: {
+        status: updateStatusDto.status,
+      },
     });
   }
 

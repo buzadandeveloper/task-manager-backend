@@ -13,6 +13,7 @@ import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskResponseDto } from './dto/task-response.dto';
+import { UpdateStatusDto } from './dto/update-status.dto';
 import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -98,6 +99,24 @@ export class TaskController {
     const user = (req as any).user;
     const userId = user.sub;
     return this.taskService.updateTask(id, updateTaskDto, userId);
+  }
+
+  @Put('updateStatus/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Update task status' })
+  @ApiResponse({
+    status: 200,
+    description: 'The task status has been successfully updated.',
+    type: TaskResponseDto,
+  })
+  async updateTaskStatus(
+    @Param('id') id: number,
+    @Body() updateStatusDto: UpdateStatusDto,
+    @Req() req: Request,
+  ) {
+    const user = (req as any).user;
+    const userId = user.sub;
+    return this.taskService.updateTaskStatus(id, updateStatusDto, userId);
   }
 
   @Delete('removeTask/:id')
