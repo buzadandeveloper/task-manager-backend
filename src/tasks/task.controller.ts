@@ -1,12 +1,13 @@
 import {
+  Body,
   Controller,
-  Req,
+  Delete,
   Get,
+  Param,
   Post,
   Put,
-  Delete,
-  Param,
-  Body,
+  Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
@@ -16,7 +17,7 @@ import { TaskResponseDto } from './dto/task-response.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TaskStatus } from './enum/task.enum';
 
 @ApiTags('tasks')
@@ -26,16 +27,20 @@ export class TaskController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Get all tasks' })
+  @ApiOperation({ summary: 'Get all tasks (optionally filtered by status)' })
   @ApiResponse({
     status: 200,
-    description: 'Return all tasks of the logged-in user',
+    description:
+      'Return all tasks of the logged-in user, optionally filtered by status',
     type: [TaskResponseDto],
   })
-  async getAllTasks(@Req() req: Request) {
+  async getAllTasks(@Req() req: Request, @Query('status') status?: TaskStatus) {
     const user = (req as any).user;
     const userId = user.sub;
-    return this.taskService.getAllTasks(userId);
+    if (status === undefined || status === TaskStatus.All) {
+      return this.taskService.getAllTasks(userId);
+    }
+    return this.taskService.getTasksByStatus(Number(status), userId);
   }
 
   @Get(':id')
