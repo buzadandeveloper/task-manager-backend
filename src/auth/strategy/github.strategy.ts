@@ -24,7 +24,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
   ) {
     let email = profile.emails?.[0]?.value;
 
-    if (!email) email = `User - ${profile.displayName}`;
+    if (!email) email = `Hello ${profile.displayName}`;
 
     const user = await this.authService.findOrCreateUser({
       email,
