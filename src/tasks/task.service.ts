@@ -37,6 +37,7 @@ export class TaskService {
         status,
         userId: userId,
       },
+      orderBy: { id: 'asc' },
     });
   }
 
