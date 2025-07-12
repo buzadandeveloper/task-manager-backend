@@ -12,6 +12,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
       clientSecret: `${process.env.GITHUB_CLIENT_SECRET}`,
       callbackURL: `${process.env.BACKEND_URL}/auth/github/callback`,
       passReqToCallback: true,
+      scope: ['user:email'],
     });
   }
 
@@ -21,8 +22,12 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     refreshToken: string,
     profile: any,
   ) {
+    let email = profile.emails?.[0]?.value;
+
+    if (!email) email = `User - ${profile.displayName}`;
+
     const user = await this.authService.findOrCreateUser({
-      email: profile.emails[0].value,
+      email,
       name: profile.displayName || profile.emails[0].value.split('@')[0],
       provider: 'github',
       avatar: profile.photos?.[0]?.value || null,
