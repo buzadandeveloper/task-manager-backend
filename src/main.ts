@@ -66,9 +66,9 @@ async function createNestServer() {
   return app.getHttpAdapter().getInstance();
 }
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   if (!cachedApp) {
     cachedApp = await createNestServer();
   }
-  return cachedApp && cachedApp(req, res);
-}
+  return cachedApp &&  cachedApp(req, res);
+};
