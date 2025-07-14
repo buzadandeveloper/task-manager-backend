@@ -5,7 +5,6 @@ import { ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import * as process from 'process';
 import rateLimit from 'express-rate-limit';
-import { Express } from 'express';
 
 dotenv.config({
   path: process.env.NODE_ENV === 'development' ? '.env.dev' : '.env',
@@ -16,9 +15,7 @@ const allowedOrigins = [
   'https://task-manager-frontend-mu-ten.vercel.app',
 ];
 
-let cachedApp: Express | null = null;
-
-async function createNestServer() {
+async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
@@ -61,15 +58,7 @@ async function createNestServer() {
     }),
   );
 
-  await app.init();
-
-  return app.getHttpAdapter().getInstance();
+  await app.listen(process.env.PORT ?? 5000);
 }
 
-module.exports = async (req, res) => {
-  if (!cachedApp) {
-    cachedApp = await createNestServer();
-  }
-  // @ts-ignore
-  return cachedApp(req, res);
-};
+void bootstrap();
