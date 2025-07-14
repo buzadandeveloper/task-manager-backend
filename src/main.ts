@@ -70,5 +70,6 @@ module.exports = async (req, res) => {
   if (!cachedApp) {
     cachedApp = await createNestServer();
   }
-  return cachedApp &&  cachedApp(req, res);
+  // @ts-ignore
+  return cachedApp(req, res);
 };
