@@ -13,8 +13,8 @@ export class UserResponseDto {
   @ApiProperty()
   provider: string;
 
-  @ApiProperty({ required: false })
-  avatar?: string;
+  @ApiProperty({ required: false, nullable: true })
+  avatar?: string | null;
 
   @ApiProperty()
   createdAt: Date;

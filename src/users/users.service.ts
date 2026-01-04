@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserResponseDto } from './dto/user-response.dto';
-import { toUserResponseDto } from './utils/toUserResponseDto';
 
 @Injectable()
 export class UsersService {
@@ -16,6 +15,6 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    return toUserResponseDto(user);
+    return user;
   }
 }
